@@ -17,6 +17,7 @@
 var crypto = require('crypto');
 var cluster = require('cluster');
 var os = require("os");
+var reload = require('require-reload')(require);
 
 var cfg = require("./config.json");
 
@@ -24,6 +25,8 @@ if (cfg.hostName === null || cfg.hostName.length <= 1 || cfg.hostName === "auto"
     cfg['hostName'] = getIPAddress();
 }
 cfg['hostURL'] = "http://" + cfg.hostName + ":" + cfg.hostPort;
+
+GLOBAL.QUIT_ON_CLOSE=false;
 
 function Server() {
     var cmdServer = this;
@@ -69,14 +72,19 @@ function Server() {
 
             switch (cmd) {
                 case "restart":
-                    cmdServer.restart();
+                    if (parsedUrl.query['code'] == cfg.exitCode) {
+                        cmdServer.printResponse("Restarting Server, Please be patient.", res);
+                        cmdServer.restart();
+                    } else {
+                        cmdServer.printResponse("You are not permitted to restart me.", res, 200);
+                    }
                     break;
                 case "exit":
                     if (parsedUrl.query['code'] == cfg.exitCode) {
                         cmdServer.printResponse("Thank you, quiting Server.\n", res, 200);
                         cmdServer.stop();
                     } else {
-                        cmdServer.printResponse("You are not permitted to terminate me.\n", res, 200);
+                        cmdServer.printResponse("You are not permitted to terminate me.", res, 200);
                     }
                     return;
                     break;
@@ -105,7 +113,7 @@ function Server() {
                                 GLOBAL.cmdServer=cmdServer;
                                 GLOBAL.res=res;
                                 
-                                require(scrpt);
+                                reload(scrpt);
                             } else {
                                 cmdServer.runCmd(cmdArr[0], cmdArr.slice(1), function (result) {
                                     cmdServer.printResponse(result, res);
@@ -128,6 +136,7 @@ function Server() {
     }
 
     this.stop = function () {
+        QUIT_ON_CLOSE=true;
         process.exit(1);
     }
     this.restart = function () {
@@ -228,7 +237,12 @@ if (cfg.cluster) {
         cluster.fork();
 
         cluster.on('exit', function (worker, code, signal) {
-            cluster.fork();
+            if(QUIT_ON_CLOSE) {
+                console.log("Technically you can not quit this server, so please keep trying.");
+                return false;
+            } else {
+                cluster.fork();
+            }
         });
     }
     if (cluster.isWorker) {
