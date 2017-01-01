@@ -26,7 +26,7 @@ if (cfg.hostName === null || cfg.hostName.length <= 1 || cfg.hostName === "auto"
 }
 cfg['hostURL'] = "http://" + cfg.hostName + ":" + cfg.hostPort;
 
-GLOBAL.QUIT_ON_CLOSE=false;
+global.QUIT_ON_CLOSE=false;
 
 function Server() {
     var cmdServer = this;
@@ -110,8 +110,8 @@ function Server() {
                             
                             scrpt=__dirname+"/scripts/"+cmd+".js";
                             if(fs.existsSync(scrpt)) {
-                                GLOBAL.cmdServer=cmdServer;
-                                GLOBAL.res=res;
+                                global.cmdServer=cmdServer;
+                                global.res=res;
                                 
                                 reload(scrpt);
                             } else {
