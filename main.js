@@ -88,7 +88,7 @@ function Server() {
                     }
                     return;
                     break;
-                case "test":
+                case "testnsa":
                     throw new Error('User generated fault.');
                     return;
                     break;
