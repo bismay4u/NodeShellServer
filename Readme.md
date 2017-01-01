@@ -9,4 +9,15 @@ an web application can be built for doing certain tasks.
 
 It started as a minor project, but then quickly grew to include a lot many tasks.
 I have tried to have too many dependency, not that its a problem, just to keep the
-project small and agile. Deploying it needs just one library.
+project small and agile.
+
+
+## Small Example Usage
++ Collection system state, information and services to a central portal.
++ Assigning and enforcing security policies for all computers.
++ Updates and patch releases to each computer registered on portal.
++ Controls security and remote access to the registered computer.
+
+## Todos
++ Multi command support
++ Advanced middleware
