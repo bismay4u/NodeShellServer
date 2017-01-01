@@ -12,8 +12,11 @@ I have tried to have too many dependency, not that its a problem, just to keep t
 project small and agile.
 
 
-## Small Example Usage
+## Example Usage
 + Collection system state, information and services to a central portal.
+++ http://localhost:8090/?cmd=users
+++ http://localhost:8090/?cmd=netstat -p --inet
+++ http://localhost:8090/?cmd=ps -aux
 + Assigning and enforcing security policies for all computers.
 + Updates and patch releases to each computer registered on portal.
 + Controls security and remote access to the registered computer.
